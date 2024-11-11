@@ -6,16 +6,10 @@ def read_file(file_path=None, flag="r"):
         chunk_size = 1024
         if file_path:
             with open(file_path, flag) as file:
-                while True:
-                    chunk = file.read(chunk_size)
-                    if not chunk:
-                        break
+                while chunk := file.read(chunk_size):
                     yield chunk
         else:
-            while True:
-                chunk = sys.stdin.read(chunk_size)
-                if not chunk:
-                    break
+            while chunk := sys.stdin.read(chunk_size):
                 yield chunk
 
     except FileNotFoundError:
@@ -32,5 +26,17 @@ def count_bytes(file_path):
             return content
         else:
             count += len(content)
+
+    return f"{count} {file_path}"
+
+
+def count_lines(file_path):
+    count = 0
+    file_content = read_file(file_path, "r")
+    for content in file_content:
+        if isinstance(content, Exception):
+            return content
+        else:
+            count += content.count("\n")
 
     return f"{count} {file_path}"
